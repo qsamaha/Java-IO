@@ -9,10 +9,10 @@ public class Main {
 
     private static Locations locations = new Locations();
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException{
         Scanner scan = new Scanner(System.in);
 
-        int loc = 64;
+        int loc = 1;
         while(true){
             System.out.println(locations.get(loc).getDescription());
             if(loc == 0){

@@ -5,118 +5,56 @@ import java.util.*;
 
 public class Locations implements Map<Integer, Location> {
 
-    private static Map<Integer, Location> locations = new HashMap<Integer, Location>();
+    private static final Map<Integer, Location> locations = new LinkedHashMap<Integer, Location>();
 
     public static void main(String[] args) throws IOException {
-//        FileWriter locFile = null;
-//        try {
-//            locFile = new FileWriter("locations.txt");
-//            for (Location location : locations.values()) {
-//                locFile.write(location.getLocationId() + " " + location.getDescription() + "\n");
-//                throw new IOException("test exception thrown while writing");
-//            }
-//        } finally {
-//            System.out.println("In finally block");
-//            if (locFile != null) {
-//                System.out.println("Attempting to close locFile");
-//                locFile.close();
-//            }
-//        }
-//
-        try (FileWriter locFile = new FileWriter("locations.txt");
-             FileWriter difFile = new FileWriter("direction.txt")) {
+
+        try (BufferedWriter locFile = new BufferedWriter(new FileWriter("locations.txt"));
+             BufferedWriter difFile = new BufferedWriter(new FileWriter("direction.txt"))) {
             for (Location location : locations.values()) {
                 locFile.write(location.getLocationId() + ", " + location.getDescription() + "\n");
                 for (String direction : location.getExits().keySet()) {
                     difFile.write(location.getLocationId() + "," + direction + "," + location.getExits().get(direction) + "\n");
 
+
                 }
+                locFile.flush();
+                difFile.close();
             }
         }
 
+
     }
+
     static {
 
         try {
-            try (Scanner scan = new Scanner(new BufferedReader(new FileReader("locations_big.txt")))) {
-                scan.useDelimiter(",");
-                while (scan.hasNextLine()) {
-                    int location = scan.nextInt();
-                    scan.skip(scan.delimiter());
-                    String description = scan.nextLine();
-                    System.out.println("Imported loc: " + location + ": " + description);
-                    Map<String, Integer> tempExit = new HashMap<>();
-                    locations.put(location, new Location(location, description, tempExit));
+            FileReader fr = new FileReader("locations_big.txt");
+            try (BufferedReader br = new BufferedReader(fr)) {
+                String s = null;
+                while ((s = br.readLine()) != null) {
+                    System.out.println(s);
                 }
             }
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
         //Now read exits
-        try (Scanner scan = new Scanner(new FileReader("directions_big.txt"))){
-            scan.useDelimiter(",");
-            while (scan.hasNextLine()) {
-                String input = scan.nextLine();
-                String [] data = input.split(",");
-                int loc = Integer.parseInt(data[0]);
-                String direction = data [1];
-                int destination = Integer.parseInt(data [2]);
-                System.out.println(loc + ": " + direction + ": " + destination);
-                Location location = locations.get(loc);
-                location.addExit(direction, destination);
+        try {
+            FileReader fr = new FileReader("directions_big.txt");
+            try (BufferedReader br = new BufferedReader(fr)) {
+                String s = null;
+                while ((s = br.readLine()) != null) {
+                    System.out.println(s);
+                }
 
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        }
-
-//
-//        Map<String, Integer> tempExit = new HashMap<String, Integer>();
-//
-//        locations.put(0, new
-//
-//                Location(0, "You are sitting in front of a computer learning Java", tempExit));
-//
-//
-//        tempExit.put("W", 2);
-//        tempExit.put("E", 3);
-//        tempExit.put("S", 5);
-//        tempExit.put("N", 2);
-//        locations.put(1, new
-//
-//                Location(1, "You are standing at the end of a road before a small brick building", tempExit));
-//
-//
-//        tempExit = new HashMap<String, Integer>();
-//        tempExit.put("N", 5);
-//        locations.put(2, new
-//
-//                Location(2, "You are at the top of a hill", tempExit));
-//
-//        tempExit = new HashMap<String, Integer>();
-//        tempExit.put("W", 1);
-//        locations.put(3, new
-//
-//                Location(3, "You are inside a building, a well house for a small spring", tempExit));
-//
-//
-//        tempExit = new HashMap<String, Integer>();
-//        tempExit.put("N", 1);
-//        tempExit.put("W", 2);
-//        locations.put(4, new
-//
-//                Location(4, "You are in a valley besides stream", tempExit));
-//
-//
-//        tempExit = new HashMap<String, Integer>();
-//        tempExit.put("S", 1);
-//        tempExit.put("W", 2);
-//        locations.put(5, new
-//
-//                Location(5, "You are in the forest", tempExit));
+    }
 
 
     @Override
