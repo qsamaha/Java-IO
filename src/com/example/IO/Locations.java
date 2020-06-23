@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 
 public class Locations implements Map<Integer, Location> {
-
+    //Updated Wrong repo need this comment for changes to github
     private static Map<Integer, Location> locations = new LinkedHashMap<Integer, Location>();
 
     public static void main(String[] args) throws IOException {
